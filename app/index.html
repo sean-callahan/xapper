@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="static/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="menu">
+        <div class="status">
+          <span class="light lit"></span>
+          <span>Connected</span>
+        </div>
+      </div>
+      <div class="channels" id="I">
+        <h3 class="name">Inputs</h3>
+      </div>
+      <div class="channels" id="O">
+        <h3 class="name">Outputs</h3>
+      </div>
+    </div>
+    
+    <script src="static/app.js"></script>
+    <script>
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var state = JSON.parse(this.responseText);
+          for (var groupName in state.channels) {
+            var group = state.channels[groupName];
+            for (var i = 0; i < group.length; i++) {
+              CreateChannel(i + 1, groupName, group[i]);
+            }
+          }
+        }
+      };
+      xhttp.open("GET", 'http://127.0.0.1:1337/0', true);
+      xhttp.send();
+
+      setInterval(Heartbeat, 1000);
+    </script>
+  </body>
+</html>
